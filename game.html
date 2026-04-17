@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>أكاديمية HTML المتقدمة - 10 ألعاب تفاعلية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0f0c29, #1a1a2e, #16213e);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(76, 201, 240, 0.08) 0%, transparent 30%),
+                        radial-gradient(circle at 80% 70%, rgba(247, 37, 133, 0.08) 0%, transparent 30%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 30px;
+            border-radius: 60px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 40px;
+            color: #4cc9f0;
+            filter: drop-shadow(0 0 10px rgba(76, 201, 240, 0.5));
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4cc9f0, #f72585);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .score-board {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 25px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 40px;
+            padding: 35px 20px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            border-color: rgba(76, 201, 240, 0.6);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-icon {
+            font-size: 58px;
+            margin-bottom: 20px;
+            color: #4cc9f0;
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover .game-icon {
+            transform: scale(1.1);
+            color: #f72585;
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .game-desc {
+            color: #b0b0b0;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .game-screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #4cc9f0;
+        }
+
+        .question-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .option, .tf-option, .blank-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .option:hover {
+            background: rgba(76, 201, 240, 0.15);
+            border-color: #4cc9f0;
+            transform: scale(1.02);
+        }
+
+        .correct {
+            background: rgba(76, 201, 240, 0.3) !important;
+            border-color: #4cc9f0 !important;
+            box-shadow: 0 0 12px rgba(76, 201, 240, 0.4);
+        }
+
+        .wrong {
+            background: rgba(247, 37, 133, 0.3) !important;
+            border-color: #f72585 !important;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(12px);
+            padding: 15px 30px;
+            border-radius: 60px;
+            display: none;
+            font-weight: 500;
+            z-index: 1000;
+            border-right: 5px solid;
+        }
+
+        .feedback.success { border-color: #4cc9f0; background: rgba(76, 201, 240, 0.2); }
+        .feedback.error { border-color: #f72585; background: rgba(247, 37, 133, 0.2); }
+
+        /* ألعاب إضافية - كلمات متقاطعة */
+        .crossword-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .crossword-cell {
+            background: rgba(255,255,255,0.1);
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 12px;
+            border: 1px solid #4cc9f0;
+        }
+        .crossword-clues {
+            margin-top: 20px;
+            text-align: right;
+        }
+        /* سورتر الكود */
+        .sorter-list {
+            background: rgba(0,0,0,0.4);
+            border-radius: 30px;
+            padding: 20px;
+        }
+        .sorter-item {
+            background: rgba(76, 201, 240, 0.15);
+            margin: 12px 0;
+            padding: 15px;
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .typing-area input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 60px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #4cc9f0;
+            color: white;
+            font-size: 18px;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            .navbar { flex-direction: column; text-align: center; }
+            .question-text { font-size: 20px; }
+            .options { grid-template-columns: 1fr; }
+            .crossword-grid { gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-gamepad"></i><h1>أكاديمية HTML العملاقة</h1></div>
+        <div class="score-board"><i class="fas fa-star"></i><span>النقاط: <span id="total-points">0</span></span></div>
+    </nav>
+
+    <div id="main-screen" class="active">
+        <h2 style="text-align:center; margin-bottom:20px; color:#4cc9f0;">🎮 10 ألعاب تفاعلية لتعلّم HTML و CSS 🎮</h2>
+        <div class="games-grid">
+            <div class="game-card" onclick="startGame('matching')"><div class="game-icon"><i class="fas fa-link"></i></div><div class="game-title">تحدي التطابق</div><div class="game-desc">اربط الوسم بالوصف المناسب</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('memory')"><div class="game-icon"><i class="fas fa-brain"></i></div><div class="game-title">اختبار الذاكرة</div><div class="game-desc">أوجد الأزواج المتطابقة</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('coding')"><div class="game-icon"><i class="fas fa-laptop-code"></i></div><div class="game-title">مختبر الأكواد</div><div class="game-desc">اختر الإجابة الصحيحة</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('comprehensive')"><div class="game-icon"><i class="fas fa-clipboard-list"></i></div><div class="game-title">الاختبار الشامل</div><div class="game-desc">12 سؤال متنوع + نتيجة</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('truefalse')"><div class="game-icon"><i class="fas fa-check-double"></i></div><div class="game-title">صح أم خطأ</div><div class="game-desc">حدد صحة العبارات البرمجية</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('fillblanks')"><div class="game-icon"><i class="fas fa-edit"></i></div><div class="game-title">املأ الفراغ</div><div class="game-desc">أكمل الكود الناقص</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('codesorter')"><div class="game-icon"><i class="fas fa-sort-amount-down"></i></div><div class="game-title">ترتيب الكود</div><div class="game-desc">رتب أجزاء HTML بالترتيب الصحيح</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('crossword')"><div class="game-icon"><i class="fas fa-puzzle-piece"></i></div><div class="game-title">الكلمات المتقاطعة</div><div class="game-desc">أكمل شبكة HTML</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('typing')"><div class="game-icon"><i class="fas fa-keyboard"></i></div><div class="game-title">الكاتب السريع</div><div class="game-desc">اكتب الوسم بناءً على الوصف</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+            <div class="game-card" onclick="startGame('cssselector')"><div class="game-icon"><i class="fab fa-css3-alt"></i></div><div class="game-title">مُحدد CSS</div><div class="game-desc">اختر المُحدد الصحيح للعنصر</div><div style="color:#4cc9f0;">▶ ابدأ</div></div>
+        </div>
+    </div>
+
+    <!-- باقي شاشات الألعاب (سيتم ملؤها ديناميكياً لكن نضع هيكل أساسي) -->
+    <div id="matching-screen" class="game-screen"></div>
+    <div id="memory-screen" class="game-screen"></div>
+    <div id="coding-screen" class="game-screen"></div>
+    <div id="comprehensive-screen" class="game-screen"></div>
+    <div id="truefalse-screen" class="game-screen"></div>
+    <div id="fillblanks-screen" class="game-screen"></div>
+    <div id="codesorter-screen" class="game-screen"></div>
+    
+    <!-- شاشات جديدة -->
+    <div id="crossword-screen" class="game-screen">
+        <div class="game-header"><button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> العودة</button><h2>📝 الكلمات المتقاطعة</h2><div class="score-board"><i class="fas fa-star"></i> <span id="crossword-points">0</span></div></div>
+        <div class="question-container"><div id="crossword-area" style="text-align:center;"></div><div id="crossword-clues" class="crossword-clues"></div><button class="nav-btn" id="check-crossword" style="margin-top:20px;">تحقق من الحل</button></div>
+        <div class="nav-buttons"><button class="nav-btn" onclick="goBack()">رجوع للقائمة</button></div>
+    </div>
+
+    <div id="typing-screen" class="game-screen">
+        <div class="game-header"><button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> العودة</button><h2>⌨️ الكاتب السريع</h2><div class="score-board"><i class="fas fa-star"></i> <span id="typing-points">0</span></div></div>
+        <div class="question-container"><div class="question-text" id="typing-question"></div><div class="typing-area"><input type="text" id="typing-input" placeholder="اكتب الإجابة هنا..."><button class="nav-btn" id="submit-typing" style="margin-top:15px;">تحقق</button></div><div id="typing-feedback" style="text-align:center; margin-top:15px;"></div></div>
+        <div class="nav-buttons"><button class="nav-btn" id="next-typing">التالي <i class="fas fa-arrow-left"></i></button></div>
+    </div>
+
+    <div id="cssselector-screen" class="game-screen">
+        <div class="game-header"><button class="back-btn" onclick="goBack()"><i class="fas fa-arrow-right"></i> العودة</button><h2>🎨 مُحدد CSS</h2><div class="score-board"><i class="fas fa-star"></i> <span id="cssselector-points">0</span></div></div>
+        <div class="question-container"><div class="question-text" id="css-question"></div><div class="options" id="css-options"></div></div>
+        <div class="nav-buttons"><button class="nav-btn" id="next-css">التالي ◀</button></div>
+    </div>
+</div>
+<div id="feedback" class="feedback"></div>
+
+<script>
+    // ---------- قاعدة البيانات الضخمة ----------
+    const gameData = {
+        currentGame: null, currentQuestion: 0, totalPoints: 0,
+        games: {
+            matching: { name: "تحدي التطابق", score: 0, currentQuestion: 0, questions: [
+                { question: "اربط العنصر بوظيفته", elements: [{ tag:"<h1>", description:"عنوان رئيسي"},{ tag:"<p>", description:"فقرة نصية"},{ tag:"<a>", description:"رابط تشعبي"},{ tag:"<img>", description:"صورة"}] },
+                { question: "اربط عناصر القوائم", elements: [{ tag:"<ul>", description:"قائمة غير مرتبة"},{ tag:"<ol>", description:"قائمة مرتبة"},{ tag:"<li>", description:"عنصر قائمة"},{ tag:"<dl>", description:"قائمة تعريفات"}] }
+            ] },
+            memory: { name: "الذاكرة", score: 0, currentQuestion: 0, questions: [{ pairs: [["<h1>","عنوان رئيسي"],["<p>","فقرة"],["<a>","رابط"],["<img>","صورة"],["<div>","حاوية"],["<span>","نص داخلي"],["<ul>","قائمة نقطية"],["<ol>","قائمة رقمية"]] }] },
+            coding: { name: "مختبر الأكواد", score: 0, currentQuestion: 0, questions: [
+                { question: "ما العنصر الصحيح لعرض صورة؟", options: ["<img src='photo.jpg'>","<image>","<picture>","<photo>"], correct:0 },
+                { question: "كيف تنشئ رابطاً لـ Google؟", options: ["<a href='https://google.com'>Google</a>","<link>Google</link>","<url>Google</url>","<web>"], correct:0 },
+                { question: "أي وسم يُستخدم للنص الغامق؟", options: ["<b>","<strong>","كلاهما","<bold>"], correct:2 }
+            ] },
+            comprehensive: { name: "الاختبار الشامل", score: 0, currentQuestion: 0, answers: [], questions: [
+                { question: "ما وظيفة HTML؟", options:["تنسيق وألوان","بناء هيكل المحتوى","تفاعلية","ربط قاعدة بيانات"], correct:1, explanation:"HTML لهيكلة المحتوى" },
+                { question: "أي وسم صحيح؟", options:["<h1>","</h1>","<h1>","كل ما سبق"], correct:3, explanation:"جميعها صحيحة" },
+                { question: "السمة للنص البديل للصورة؟", options:["src","alt","title","href"], correct:1, explanation:"alt" },
+                { question: "وسم الرابط التشعبي؟", options:["<link>","<a>","<href>","<url>"], correct:1, explanation:"<a>" },
+                { question: "تحديد اللغة العربية؟", options:["<html lang='ar'>","<meta arabic>","<body dir>","جميعها"], correct:0, explanation:"lang='ar'" },
+                { question: "نص عريض في CSS؟", options:["font-weight:bold","font-style:bold","text-bold","bold"], correct:0, explanation:"font-weight:bold" },
+                { question: "صورة خلفية؟", options:["background-image","img-background","back-img","background-pic"], correct:0, explanation:"background-image" },
+                { question: "مسافة داخل العنصر؟", options:["margin","padding","gap","spacing"], correct:1, explanation:"padding" },
+                { question: "نص مائل في CSS؟", options:["font-style:italic","font-weight:italic","text-italic","italic"], correct:0, explanation:"font-style:italic" },
+                { question: "خط تحت النص؟", options:["text-decoration:underline","font-underline","text-line","underline"], correct:0, explanation:"text-decoration" },
+                { question: "الوسم الذي يضيف سطر أفقي؟", options:["<hr>","<br>","<line>","<hline>"], correct:0 },
+                { question: "أي خاصية تغير لون النص؟", options:["color","text-color","font-color","bgcolor"], correct:0 }
+            ] },
+            truefalse: { name: "صح أم خطأ", score: 0, currentQuestion: 0, answers: [], questions: [
+                { statement: "HTML تستخدم لتنسيق الألوان فقط.", isTrue: false, explanation: "HTML للهيكل وليس التنسيق فقط." },
+                { statement: "الوسم <br> يقوم بإدراج فاصل سطر.", isTrue: true, explanation: "صحيح، <br> = سطر جديد." },
+                { statement: "الخاصية 'alt' إلزامية لكل صورة.", isTrue: false, explanation: "موصى بها بشدة لكنها ليست إلزامية." },
+                { statement: "يمكن كتابة CSS داخل وسم <style>.", isTrue: true, explanation: "صحيح، داخليًا." },
+                { statement: "الوسم <footer> يوضع فقط في نهاية الصفحة.", isTrue: false, explanation: "يمكن استخدامه داخل أي قسم." },
+                { statement: "JavaScript يمكن كتابتها داخل وسم <script>.", isTrue: true, explanation: "نعم" }
+            ] },
+            fillblanks: { name: "املأ الفراغ", score: 0, currentQuestion: 0, answers: [], questions: [
+                { sentence: "عنوان رئيسي في HTML يكتب باستخدام وسم ______.", correctAnswer: "h1", hint: "وسم العنوان الأكبر" },
+                { sentence: "لإضافة صورة نستخدم وسم ______ مع خاصية src.", correctAnswer: "img", hint: "وسم الصورة" },
+                { sentence: "لإنشاء رابط نستخدم وسم ______.", correctAnswer: "a", hint: "anchor" },
+                { sentence: "قائمة غير مرتبة تبدأ بوسم ______.", correctAnswer: "ul", hint: "unordered list" },
+                { sentence: "وسم الفقرة هو ______.", correctAnswer: "p", hint: "paragraph" }
+            ] },
+            codesorter: { name: "ترتيب الكود", score: 0, currentQuestion: 0, userOrders: [], questions: [
+                { correctOrder: ["<!DOCTYPE html>","<html>","<head>","<title>صفحتي</title>","</head>","<body>","<h1>مرحباً</h1>","</body>","</html>"], fragments: ["<!DOCTYPE html>","<html>","<head>","<title>صفحتي</title>","</head>","<body>","<h1>مرحباً</h1>","</body>","</html>"] },
+                { correctOrder: ["<ul>","<li>عنصر1</li>","<li>عنصر2</li>","</ul>"], fragments: ["<ul>","<li>عنصر1</li>","<li>عنصر2</li>","</ul>"] }
+            ] },
+            crossword: { name: "الكلمات المتقاطعة", score: 0, solved: false, gridData: null },
+            typing: { name: "الكاتب السريع", score: 0, currentIndex: 0, questions: [
+                { desc: "وسم إنشاء عنوان رئيسي من المستوى الأول", answer: "h1" }, { desc: "وسم الفقرة", answer: "p" }, { desc: "وسم الرابط", answer: "a" }, { desc: "وسم الصورة", answer: "img" }, { desc: "وسم القائمة غير المرتبة", answer: "ul" }
+            ] },
+            cssselector: { name: "مُحدد CSS", score: 0, currentQ: 0, questions: [
+                { target: "اختر المُحدد الذي يستهدف جميع عناصر <p>", options: ["p", ".p", "#p", "p."], correct:0 },
+                { target: "مُحدد العنصر ذو id='header'", options: ["#header", ".header", "header", "*header"], correct:0 },
+                { target: "مُحدد class='box'", options: [".box", "#box", "box", "box."], correct:0 }
+            ] }
+        }
+    };
+
+    // متغيرات مساعدة
+    let memoryFlipped = [], memoryMatched = 0;
+    let tfAnswered = false, fillAnsweredFlag = false;
+
+    function startGame(type) {
+        document.getElementById('main-screen').classList.remove('active');
+        document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`${type}-screen`).classList.add('active');
+        gameData.currentGame = type;
+        gameData.currentQuestion = 0;
+        if(type === 'memory') { memoryFlipped = []; memoryMatched = 0; }
+        if(type === 'truefalse') tfAnswered = false;
+        if(type === 'fillblanks') fillAnsweredFlag = false;
+        if(type === 'crossword') loadCrossword();
+        else if(type === 'typing') loadTyping();
+        else if(type === 'cssselector') loadCSSSelector();
+        else loadQuestion();
+    }
+
+    function goBack() {
+        document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
+        document.getElementById('main-screen').classList.add('active');
+        updateTotalScore();
+    }
+
+    function loadQuestion() {
+        const type = gameData.currentGame;
+        const game = gameData.games[type];
+        if(!game || !game.questions[gameData.currentQuestion]) return;
+        if(type === 'matching') loadMatching(game.questions[gameData.currentQuestion]);
+        else if(type === 'memory') loadMemory(game.questions[gameData.currentQuestion]);
+        else if(type === 'coding') loadCoding(game.questions[gameData.currentQuestion]);
+        else if(type === 'comprehensive') loadComprehensive(game.questions[gameData.currentQuestion]);
+        else if(type === 'truefalse') loadTrueFalse(game.questions[gameData.currentQuestion]);
+        else if(type === 'fillblanks') loadFillBlanks(game.questions[gameData.currentQuestion]);
+        else if(type === 'codesorter') loadCodeSorter(game.questions[gameData.currentQuestion]);
+        updateGameScore();
+    }
+
+    function loadMatching(q) { /* تطابق بالكامل (يعاد بناء واجهة) */ 
+        let scr = document.getElementById('matching-screen');
+        scr.innerHTML = `<div class="game-header"><button class="back-btn" onclick="goBack()">↩️ العودة</button><h2>تحدي التطابق</h2><div class="score-board">⭐ <span id="matching-points">0</span></div></div>
+        <div class="question-container"><div class="question-text">${q.question}</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;"><div><h3 style="color:#4cc9f0;">العناصر</h3><div id="matching-items"></div></div><div><h3 style="color:#f72585;">الأوصاف</h3><div id="matching-targets"></div></div></div></div>
+        <div class="nav-buttons"><button class="nav-btn" onclick="previousQuestion()">▶ السابق</button><button class="nav-btn" onclick="nextQuestion()">التالي ◀</button></div>`;
+        let itemsDiv = document.getElementById('matching-items'), targetsDiv = document.getElementById('matching-targets');
+        q.elements.forEach((el, idx) => {
+            let dragDiv = document.createElement('div'); dragDiv.className = 'option'; dragDiv.textContent = el.tag; dragDiv.draggable = true;
+            dragDiv.ondragstart = e => e.dataTransfer.setData('text/plain', idx);
+            itemsDiv.appendChild(dragDiv);
+            let targetDiv = document.createElement('div'); targetDiv.className = 'option'; targetDiv.textContent = el.description;
+            targetDiv.ondragover = e => e.preventDefault();
+            targetDiv.ondrop = e => { e.preventDefault(); let dragged = parseInt(e.dataTransfer.getData('text/plain')); if(dragged === idx) { targetDiv.style.background = '#4cc9f033'; gameData.games.matching.score += 10; updateGameScore(); showFeedback('✔️ تطابق صحيح! +10', 'success'); } else showFeedback('❌ غير صحيح', 'error'); };
+            targetsDiv.appendChild(targetDiv);
+        });
+    }
+
+    function loadMemory(q) { /* بناء الذاكرة */ 
+        let container = document.getElementById('memory-screen');
+        container.innerHTML = `<div class="game-header"><button class="back-btn" onclick="goBack()">↩️</button><h2>اختبار الذاكرة</h2><div class="score-board">⭐ <span id="memory-points">0</span></div></div><div class="question-container"><div class="question-text">ابحث عن الأزواج</div><div id="memory-cards" style="display:grid; grid-template-columns:repeat(4,1fr); gap:15px;"></div></div><div class="nav-buttons"><button class="nav-btn" onclick="previousQuestion()">▶ السابق</button><button class="nav-btn" onclick="nextQuestion()">التالي ◀</button></div>`;
+        let cardsDiv = document.getElementById('memory-cards');
+        let cards = [];
+        q.pairs.forEach((pair, pid) => { cards.push({ content: pair[0], pairId: pid, type:'code' }); cards.push({ content: pair[1], pairId: pid, type:'desc' }); });
+        cards.sort(() => Math.random() - 0.5);
+        cards.forEach((card) => {
+            let cardEl = document.createElement('div'); cardEl.className = 'option'; cardEl.style.height = '100px'; cardEl.style.display='flex'; cardEl.style.alignItems='center'; cardEl.style.justifyContent='center'; cardEl.textContent = '?'; cardEl.dataset.pairId = card.pairId; cardEl.dataset.content = card.content;
+            cardEl.onclick = () => flipMemoryCard(cardEl);
+            cardsDiv.appendChild(cardEl);
+        });
+        memoryFlipped = []; memoryMatched = 0;
+    }
+    function flipMemoryCard(card) { if(card.classList.contains('correct') || card.classList.contains('flipped') || memoryFlipped.length >= 2) return; card.textContent = card.dataset.content; card.classList.add('flipped'); memoryFlipped.push(card); if(memoryFlipped.length === 2) setTimeout(checkMemoryMatch, 500); }
+    function checkMemoryMatch() { let [c1, c2] = memoryFlipped; if(c1.dataset.pairId === c2.dataset.pairId) { c1.classList.add('correct'); c2.classList.add('correct'); gameData.games.memory.score += 10; updateGameScore(); showFeedback('🎉 زوج صحيح!', 'success'); memoryMatched += 2; } else { setTimeout(() => { c1.textContent = '?'; c2.textContent = '?'; c1.classList.remove('flipped'); c2.classList.remove('flipped'); }, 400); } memoryFlipped = []; }
+    function loadCoding(q) { let scr = document.getElementById('coding-screen'); scr.innerHTML = `<div class="game-header"><button class="back-btn" onclick="goBack()">↩️</button><h2>مختبر الأكواد</h2><div class="score-board">⭐ <span id="coding-points">0</span></div></div><div class="question-container"><div class="question-text">${q.question}</div><div class="options" id="coding-options"></div></div><div class="nav-buttons"><button class="nav-btn" onclick="previousQuestion()">▶ السابق</button><button class="nav-btn" onclick="nextQuestion()">التالي ◀</button></div>`;
+        let opts = document.getElementById('coding-options'); q.options.forEach((opt, idx) => { let btn = document.createElement('div'); btn.className = 'option'; btn.innerText = opt; btn.onclick = () => { if(btn.classList.contains('correct')) return; if(idx === q.correct) { btn.classList.add('correct'); gameData.games.coding.score += 10; updateGameScore(); showFeedback('✅ صحيح!', 'success'); } else { btn.classList.add('wrong'); showFeedback('❌ خطأ', 'error'); } }; opts.appendChild(btn); }); }
+    function loadComprehensive(q) { let cont = document.getElementById('comprehensive-screen'); if(cont.innerHTML.indexOf('comp-container') === -1) cont.innerHTML = `<div class="game-header"><button class="back-btn" onclick="goBack()">↩️</button><h2>الاختبار الشامل</h2><div class="score-board">⭐ <span id="comprehensive-points">0</span></div></div><div class="question-container" id="comp-container"><div class="progress-bar"><div class="progress-fill" id="comp-progress"></div></div><div class="question-text" id="comp-question"></div><div id="comp-options" class="options"></div></div><div class="nav-buttons"><button class="nav-btn" onclick="prevCompr()">▶ السابق</button><button class="nav-btn" onclick="nextCompr()">التالي ◀</button></div>`; 
+        document.getElementById('comp-question').innerText = q.question; let optsDiv = document.getElementById('comp-options'); optsDiv.innerHTML=''; q.options.forEach((opt,i)=>{ let btn=document.createElement('div'); btn.className='option'; btn.innerText=opt; btn.onclick=()=>{ if(gameData.games.comprehensive.answers[gameData.currentQuestion]!==undefined) return; if(i===q.correct){ gameData.games.comprehensive.score+=10; updateGameScore(); showFeedback('صحيح!','success'); } else showFeedback(`خطأ: ${q.explanation}`,'error'); gameData.games.comprehensive.answers[gameData.currentQuestion]=i; loadComprehensive(gameData.games.comprehensive.questions[gameData.currentQuestion]); }; optsDiv.appendChild(btn); }); let prog = (gameData.currentQuestion/gameData.games.comprehensive.questions.length)*100; if(document.getElementById('comp-progress')) document.getElementById('comp-progress').style.width=`${prog}%`; }
+    function loadTrueFalse(q) { document.getElementById('tf-question').innerText = q.statement; let optsDiv = document.getElementById('tf-options'); optsDiv.innerHTML = ''; ['✅ صح', '❌ خطأ'].forEach((txt, idx) => { let btn = document.createElement('div'); btn.className = 'tf-option option'; btn.innerText = txt; btn.onclick = () => { if(tfAnswered) return; let isCorrect = (idx === 0 && q.isTrue) || (idx === 1 && !q.isTrue); if(isCorrect) { gameData.games.truefalse.score += 10; showFeedback('صحيح! +10', 'success'); } else showFeedback(`خطأ! ${q.explanation}`, 'error'); tfAnswered = true; updateGameScore(); }; optsDiv.appendChild(btn); }); }
+    function loadFillBlanks(q) { document.getElementById('fill-question').innerHTML = q.sentence.replace('______', '<span style="background:#2c2c4e; padding:4px 12px; border-radius:30px;">______</span>'); document.getElementById('fill-input').value = ''; document.getElementById('fill-feedback').innerHTML = ''; fillAnsweredFlag = false; document.getElementById('check-fill-btn').onclick = () => { if(fillAnsweredFlag) return; let userAns = document.getElementById('fill-input').value.trim().toLowerCase(); if(userAns === q.correctAnswer.toLowerCase()) { gameData.games.fillblanks.score += 10; updateGameScore(); document.getElementById('fill-feedback').innerHTML = '<span style="color:#4cc9f0;">✅ صحيح! +10</span>'; showFeedback('أحسنت!', 'success'); } else { document.getElementById('fill-feedback').innerHTML = `<span style="color:#f72585;">❌ الإجابة: ${q.correctAnswer}</span>`; showFeedback('خطأ', 'error'); } fillAnsweredFlag = true; }; }
+    function loadCodeSorter(q) { let fragments = [...q.fragments]; if(!gameData.games.codesorter.userOrders[gameData.currentQuestion]) gameData.games.codesorter.userOrders[gameData.currentQuestion] = [...fragments]; let currentOrder = gameData.games.codesorter.userOrders[gameData.currentQuestion]; const listDiv = document.getElementById('sorter-list'); if(listDiv) { listDiv.innerHTML = ''; currentOrder.forEach((item, idx) => { let row = document.createElement('div'); row.className = 'sorter-item'; row.innerHTML = `<span>${item}</span><div><button onclick="moveSorterItem(${idx}, -1)">▲</button><button onclick="moveSorterItem(${idx}, 1)">▼</button></div>`; listDiv.appendChild(row); }); } }
+    window.moveSorterItem = function(idx, dir) { let arr = gameData.games.codesorter.userOrders[gameData.currentQuestion]; let newIdx = idx + dir; if(newIdx >=0 && newIdx < arr.length) { [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]]; loadCodeSorter(gameData.games.codesorter.questions[gameData.currentQuestion]); } };
+    window.checkSorterOrder = function() { let current = gameData.games.codesorter.userOrders[gameData.currentQuestion]; let correct = gameData.games.codesorter.questions[gameData.currentQuestion].correctOrder; if(JSON.stringify(current) === JSON.stringify(correct)) { if(!gameData.games.codesorter.questions[gameData.currentQuestion].rewarded) { gameData.games.codesorter.score += 15; updateGameScore(); showFeedback('🎯 ترتيب صحيح! +15', 'success'); gameData.games.codesorter.questions[gameData.currentQuestion].rewarded = true; } } else showFeedback('ترتيب خاطئ', 'error'); };
+    function nextQuestion() { let type = gameData.currentGame; let game = gameData.games[type]; if(gameData.currentQuestion + 1 < game.questions.length) { gameData.currentQuestion++; loadQuestion(); } else showFeedback('🎉 نهاية الأسئلة!', 'success'); }
+    function previousQuestion() { if(gameData.currentQuestion > 0) { gameData.currentQuestion--; loadQuestion(); } }
+
+    // ألعاب إضافية
+    function loadCrossword() { let gridHtml = '<div class="crossword-grid">'; const words = ["HTML","CSS","JS","TAG","DIV"]; for(let i=0;i<25;i++) gridHtml += `<div class="crossword-cell" contenteditable="true"> </div>`; gridHtml += '</div><div class="crossword-clues"><p>أفقي: 1- لغة توصيف المواقع (HTML) , 2- أوراق الأنماط (CSS)</p><p>رأسي: 1- جافا سكريبت (JS) , 2- وسم (TAG)</p></div>'; document.getElementById('crossword-area').innerHTML = gridHtml; document.getElementById('check-crossword').onclick = () => { showFeedback('لعبة كلمات متقاطعة تجريبية - أضف حلاً كاملاً', 'success'); gameData.games.crossword.score += 20; updateGameScore(); }; }
+    function loadTyping() { let idx = gameData.games.typing.currentIndex || 0; let q = gameData.games.typing.questions[idx]; document.getElementById('typing-question').innerText = q.desc; document.getElementById('typing-input').value = ''; document.getElementById('typing-feedback').innerHTML = ''; document.getElementById('submit-typing').onclick = () => { let ans = document.getElementById('typing-input').value.trim().toLowerCase(); if(ans === q.answer) { gameData.games.typing.score += 10; updateGameScore(); showFeedback('✅ إجابة صحيحة! +10', 'success'); document.getElementById('typing-feedback').innerHTML = '<span style="color:#4cc9f0;">صحيح!</span>'; } else { showFeedback(`خطأ! الإجابة: ${q.answer}`, 'error'); document.getElementById('typing-feedback').innerHTML = `<span style="color:#f72585;">❌ الإجابة: ${q.answer}</span>`; } }; document.getElementById('next-typing').onclick = () => { if(gameData.games.typing.currentIndex + 1 < gameData.games.typing.questions.length) { gameData.games.typing.currentIndex++; loadTyping(); } else showFeedback('أكملت جميع الأسئلة!', 'success'); }; }
+    function loadCSSSelector() { let idx = gameData.games.cssselector.currentQ || 0; let q = gameData.games.cssselector.questions[idx]; document.getElementById('css-question').innerText = q.target; let optsDiv = document.getElementById('css-options'); optsDiv.innerHTML = ''; q.options.forEach((opt, i) => { let btn = document.createElement('div'); btn.className = 'option'; btn.innerText = opt; btn.onclick = () => { if(i === q.correct) { gameData.games.cssselector.score += 10; updateGameScore(); showFeedback('محدد صحيح!', 'success'); } else showFeedback('خطأ! حاول مرة أخرى', 'error'); }; optsDiv.appendChild(btn); }); document.getElementById('next-css').onclick = () => { if(gameData.games.cssselector.currentQ + 1 < gameData.games.cssselector.questions.length) { gameData.games.cssselector.currentQ++; loadCSSSelector(); } else showFeedback('انتهى التحدي!', 'success'); }; }
+    
+    function updateGameScore() { let type = gameData.currentGame; if(type && document.getElementById(`${type}-points`)) document.getElementById(`${type}-points`).innerText = gameData.games[type].score; updateTotalScore(); }
+    function updateTotalScore() { let total = Object.values(gameData.games).reduce((s,g)=> s+g.score,0); document.getElementById('total-points').innerText = total; }
+    function showFeedback(msg, type) { let fb = document.getElementById('feedback'); fb.innerText = msg; fb.className = `feedback ${type}`; fb.style.display='block'; setTimeout(()=>fb.style.display='none', 2500); }
+    window.prevCompr = () => { if(gameData.currentQuestion>0){ gameData.currentQuestion--; loadComprehensive(gameData.games.comprehensive.questions[gameData.currentQuestion]); } };
+    window.nextCompr = () => { if(gameData.currentQuestion+1 < gameData.games.comprehensive.questions.length){ gameData.currentQuestion++; loadComprehensive(gameData.games.comprehensive.questions[gameData.currentQuestion]); } else showFeedback('انتهى الاختبار!', 'success'); };
+    document.addEventListener('DOMContentLoaded', () => { updateTotalScore(); });
+    // ربط التوابع العامة
+    window.startGame = startGame; window.goBack = goBack; window.nextQuestion = nextQuestion; window.previousQuestion = previousQuestion; window.checkSorterOrder = checkSorterOrder;
+</script>
+</body>
+</html>
